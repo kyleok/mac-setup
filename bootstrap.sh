@@ -276,15 +276,15 @@ echo "Next step: Add this device to n100's Syncthing"
 echo ""
 echo "  Device ID: $MY_ID"
 echo ""
-echo "Options:"
-echo "  1. Open n100 Syncthing GUI: http://n100:8384 (if on same network)"
-echo "  2. Or from another Mac: ssh n100 then use Syncthing API"
-echo ""
-echo "Waiting for sync. Opening local Syncthing UI..."
+echo "From another Mac (already set up):"
+echo "  Go to http://localhost:8384 > Add Remote Device > paste ID above"
 echo ""
 
 # Open Syncthing web UI
 open "http://localhost:8384" 2>/dev/null || true
+
+echo "Syncthing UI opened. Waiting for sync..."
+echo ""
 
 # Optional: wait for sync
 while true; do
