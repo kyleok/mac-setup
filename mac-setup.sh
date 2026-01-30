@@ -69,6 +69,7 @@ FORMULAS=(
     watch
     cmake
     gemini-cli
+    dockutil
 )
 
 for formula in "${FORMULAS[@]}"; do
@@ -175,6 +176,24 @@ defaults write com.apple.dock minimize-to-application -bool true
 
 # Dock: Don't show recent applications
 defaults write com.apple.dock show-recents -bool false
+
+# Dock: Remove unwanted default apps
+log "Cleaning up Dock..."
+REMOVE_FROM_DOCK=(
+    "Maps"
+    "Photos"
+    "FaceTime"
+    "Phone"
+    "Contacts"
+    "TV"
+    "News"
+    "Freeform"
+    "iPhone Mirroring"
+)
+
+for app in "${REMOVE_FROM_DOCK[@]}"; do
+    dockutil --remove "$app" --no-restart 2>/dev/null || true
+done
 
 # Screenshots: Save to Desktop
 defaults write com.apple.screencapture location -string "$HOME/Desktop"
