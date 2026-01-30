@@ -23,6 +23,11 @@
 
 set -e
 
+# Prevent sleep during bootstrap
+caffeinate -d -i -s &
+CAFFEINATE_PID=$!
+trap "kill $CAFFEINATE_PID 2>/dev/null" EXIT
+
 echo "=== Mac Bootstrap ==="
 echo ""
 
@@ -267,11 +272,15 @@ echo "==========================================="
 echo "BOOTSTRAP COMPLETE"
 echo "==========================================="
 echo ""
-echo "Next step - FROM ANOTHER MAC (MBP/M4/M1), run:"
+echo "Next step: Add this device to n100's Syncthing"
 echo ""
-echo "  ssh n100 '~/bin/syncthing-add-device.sh $MY_ID'"
+echo "  Device ID: $MY_ID"
 echo ""
-echo "Then wait for sync. Opening Syncthing UI..."
+echo "Options:"
+echo "  1. Open n100 Syncthing GUI: http://n100:8384 (if on same network)"
+echo "  2. Or from another Mac: ssh n100 then use Syncthing API"
+echo ""
+echo "Waiting for sync. Opening local Syncthing UI..."
 echo ""
 
 # Open Syncthing web UI

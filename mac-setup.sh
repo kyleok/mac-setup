@@ -51,6 +51,19 @@ echo "=== Mac Setup ==="
 echo ""
 
 #######################################
+# 0. Rosetta 2 (for Apple Silicon)
+#######################################
+if [[ "$(uname -m)" == "arm64" ]]; then
+    if ! /usr/bin/pgrep -q oahd; then
+        log "Installing Rosetta 2..."
+        softwareupdate --install-rosetta --agree-to-license || warn "Rosetta 2 installation failed"
+    else
+        log "Rosetta 2 already installed"
+    fi
+fi
+echo ""
+
+#######################################
 # 1. Homebrew Packages
 #######################################
 log "Installing Homebrew formulas..."
@@ -450,7 +463,22 @@ else
 fi
 
 #######################################
-# 15. Verification
+# 15. Hostname (optional)
+#######################################
+echo ""
+afplay /System/Library/Sounds/Ping.aiff 2>/dev/null &
+current_hostname=$(scutil --get ComputerName 2>/dev/null || hostname)
+echo "Current hostname: $current_hostname"
+read -p "Set new hostname? (e.g., M4, MBP) [press Enter to skip]: " new_hostname </dev/tty
+if [ -n "$new_hostname" ]; then
+    sudo scutil --set ComputerName "$new_hostname"
+    sudo scutil --set HostName "$new_hostname"
+    sudo scutil --set LocalHostName "$new_hostname"
+    log "Hostname set to: $new_hostname"
+fi
+
+#######################################
+# 16. Verification
 #######################################
 echo ""
 log "Verifying setup..."
@@ -472,9 +500,13 @@ verify "Git" "command -v git"
 verify "GitHub CLI" "command -v gh"
 verify "GitHub CLI auth" "gh auth status"
 verify "1Password CLI" "command -v op"
+verify "uv" "command -v uv"
+verify "dockutil" "command -v dockutil"
+verify "Syncthing" "brew services list | grep -q syncthing"
 verify "CodexBar" "[ -d '/Applications/CodexBar.app' ]"
 verify "SSH config" "[ -f ~/.ssh/config ]"
 verify "zshrc" "[ -f ~/.zshrc ]"
+verify "Ghostty config" "[ -f ~/.config/ghostty/config ] || [ -L ~/.config/ghostty/config ]"
 verify "Tailscale" "/Applications/Tailscale.app/Contents/MacOS/Tailscale status"
 
 if ssh -o BatchMode=yes -o ConnectTimeout=3 n100 'echo ok' &>/dev/null; then
