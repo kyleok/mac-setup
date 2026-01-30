@@ -271,9 +271,11 @@ echo "Next step - FROM ANOTHER MAC (MBP/M4/M1), run:"
 echo ""
 echo "  ssh n100 '~/bin/syncthing-add-device.sh $MY_ID'"
 echo ""
-echo "Then wait for sync. You can monitor at http://localhost:8384"
-echo "Or wait here (Ctrl+C to skip):"
+echo "Then wait for sync. Opening Syncthing UI..."
 echo ""
+
+# Open Syncthing web UI
+open "http://localhost:8384" 2>/dev/null || true
 
 # Optional: wait for sync
 while true; do
