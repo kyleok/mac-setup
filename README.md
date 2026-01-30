@@ -70,6 +70,7 @@ The scripts expect your synced folder at `~/Codebases/memex` with:
 memex/
 ├── .ssh/
 │   ├── config              # SSH config (symlinked)
+│   ├── known_hosts         # SSH known hosts (symlinked, synced across devices)
 │   ├── id_ed25519          # SSH private key (symlinked, optional if using 1Password)
 │   └── id_ed25519.pub      # SSH public key (symlinked)
 ├── config/
@@ -123,7 +124,7 @@ memex/
 ### Private (from memex)
 
 - Git identity (name, email)
-- SSH config and keys
+- SSH config, keys, and known_hosts (synced across all devices)
 - Shell config (zshrc)
 - Ghostty config
 - Claude Code settings
