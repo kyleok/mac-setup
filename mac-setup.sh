@@ -344,15 +344,21 @@ if [ -f "$MEMEX_DIR/.ssh/id_ed25519" ]; then
             log "Symlinked SSH public key from memex"
         fi
     fi
-
-    # Setup authorized_keys for incoming SSH connections
-    if [ ! -f ~/.ssh/authorized_keys ] || ! grep -q "$(cat "$MEMEX_DIR/.ssh/id_ed25519.pub")" ~/.ssh/authorized_keys 2>/dev/null; then
-        cat "$MEMEX_DIR/.ssh/id_ed25519.pub" >> ~/.ssh/authorized_keys
-        chmod 600 ~/.ssh/authorized_keys
-        log "Added shared key to authorized_keys"
-    fi
 else
     warn "No SSH key at $MEMEX_DIR/.ssh/id_ed25519 (OK if using 1Password SSH agent)"
+fi
+
+# Symlink authorized_keys from memex
+if [ -f "$MEMEX_DIR/.ssh/authorized_keys" ]; then
+    chmod 600 "$MEMEX_DIR/.ssh/authorized_keys"
+
+    if [ ! -L ~/.ssh/authorized_keys ] || [ "$(readlink ~/.ssh/authorized_keys)" != "$MEMEX_DIR/.ssh/authorized_keys" ]; then
+        [ -f ~/.ssh/authorized_keys ] && [ ! -L ~/.ssh/authorized_keys ] && mv ~/.ssh/authorized_keys ~/.ssh/authorized_keys.bak
+        ln -sf "$MEMEX_DIR/.ssh/authorized_keys" ~/.ssh/authorized_keys
+        log "Symlinked authorized_keys from memex"
+    fi
+else
+    warn "No authorized_keys at $MEMEX_DIR/.ssh/authorized_keys"
 fi
 
 # Symlink known_hosts from memex (synced across all devices)
