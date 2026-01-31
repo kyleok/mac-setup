@@ -260,6 +260,9 @@ if ! command -v uv &>/dev/null; then
     log "Installing uv..."
     if ! curl -LsSf https://astral.sh/uv/install.sh | sh; then
         warn "Failed to install uv"
+    else
+        # Add to PATH for current script (verify check)
+        . "$HOME/.local/bin/env" 2>/dev/null || true
     fi
 fi
 
