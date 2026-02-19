@@ -83,6 +83,7 @@ FORMULAS=(
     cmake
     gemini-cli
     dockutil
+    tectonic
 )
 
 for formula in "${FORMULAS[@]}"; do
